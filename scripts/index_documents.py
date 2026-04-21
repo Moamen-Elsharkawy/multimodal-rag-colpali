@@ -60,22 +60,32 @@ def main(
 
     logger.info(f"Found {len(pdf_files)} PDF(s): {[p.name for p in pdf_files]}")
 
+    # Check if TF-IDF-only mode is forced
+    use_tfidf_only = os.getenv("USE_TFIDF_ONLY", "").lower() in ("true", "1", "yes")
+    
     # load models
     processor = PDFProcessor(dpi=dpi, max_pages=max_pages_per_pdf)
     text_fallback = False
 
-    try:
-        from src.ingestion.embedder import ColPaliEmbedder
-
-        logger.info(f"Loading ColPali model: {model_name}")
-        embedder = ColPaliEmbedder(model_name=model_name, batch_size=batch_size)
-        index = DocumentIndex(embed_dim=128)
-    except Exception as exc:
-        logger.warning(f"ColPali could not be loaded: {exc}")
-        logger.warning("Falling back to a local TF-IDF page retriever for this build.")
+    if use_tfidf_only:
+        logger.warning("USE_TFIDF_ONLY is enabled. Building TF-IDF-only index (skipping ColPali).")
         embedder = None
         index = TextPageIndex()
         text_fallback = True
+    else:
+        try:
+            from src.ingestion.embedder import ColPaliEmbedder
+
+            logger.info(f"Loading ColPali model: {model_name}")
+            embedder = ColPaliEmbedder(model_name=model_name, batch_size=batch_size)
+            index = DocumentIndex(embed_dim=128)
+        except Exception as exc:
+            logger.warning(f"ColPali could not be loaded: {exc}")
+            logger.warning("Falling back to a local TF-IDF page retriever for this build.")
+            logger.info("💡 Tip: To skip ColPali in the future, set USE_TFIDF_ONLY=true in your .env file")
+            embedder = None
+            index = TextPageIndex()
+            text_fallback = True
 
     page_id_counter = 0
     all_metas: list = []

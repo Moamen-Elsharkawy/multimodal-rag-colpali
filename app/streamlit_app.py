@@ -39,12 +39,15 @@ def _generator_mode_value(label: str) -> str:
 def _format_runtime_error(exc: Exception) -> str:
     message = str(exc)
 
-    if "Failed to load the ColPali model" in message:
+    if "Failed to load the ColPali model" in message or "ColPali model loading is disabled" in message:
         return (
             f"{message}\n\n"
-            "This machine currently cannot reach Hugging Face, so you need either:\n"
-            "1. A local ColPali/ColQwen checkpoint path in the model field, or\n"
-            "2. A machine/network that can access huggingface.co once to cache the model."
+            "**Fallback to TF-IDF**: The app will automatically use TF-IDF-based retrieval, "
+            "which is slower but still functional without Hugging Face access.\n\n"
+            "**Options**:\n"
+            "1. If you have a local model checkpoint, provide its path in the config\n"
+            "2. Set `USE_TFIDF_ONLY=true` in your `.env` file to skip ColPali entirely\n"
+            "3. Wait until you have network access to huggingface.co to cache the model"
         )
 
     if "OPENAI_API_KEY" in message or "OPENROUTER_API_KEY" in message:
@@ -232,7 +235,12 @@ st.set_page_config(
 )
 
 st.title("📄 Multi-Modal Document Intelligence")
-st.caption("ColPali-based retrieval over full PDF page images, with citation-backed answers.")
+
+# Check if using TF-IDF-only mode and update subtitle
+if os.getenv("USE_TFIDF_ONLY", "").lower() in ("true", "1", "yes"):
+    st.caption("🔄 **TF-IDF-based retrieval** (no HuggingFace required) - Works offline!")
+else:
+    st.caption("ColPali-based retrieval over full PDF page images, with citation-backed answers.")
 
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
@@ -248,10 +256,34 @@ if "retrieval_mode" not in st.session_state:
 with st.sidebar:
     st.header("Configuration")
 
+    # Determine default retrieval mode from environment
+    default_tfidf_only = os.getenv("USE_TFIDF_ONLY", "").lower() in ("true", "1", "yes")
+    default_index = 1 if default_tfidf_only else 0  # 1 = TF-IDF, 0 = Auto
+
+    retrieval_mode_label = st.radio(
+        "Retrieval mode",
+        options=["Auto (ColPali if available)", "Force TF-IDF only"],
+        index=default_index,
+        help="Auto: Try ColPali first, fallback to TF-IDF if Hugging Face is unreachable.\n\n"
+             "Force TF-IDF: Skip ColPali entirely and use keyword-based TF-IDF retrieval (faster, reliable without HuggingFace).",
+    )
+    force_tfidf_only = retrieval_mode_label.startswith("Force TF-IDF")
+    
+    if force_tfidf_only:
+        os.environ["USE_TFIDF_ONLY"] = "true"
+        if default_tfidf_only:
+            st.info("🔄 **TF-IDF-only mode** (default) — No HuggingFace access required!")
+        else:
+            st.info("🔄 TF-IDF-only mode enabled — ColPali model will be skipped.")
+    else:
+        os.environ.pop("USE_TFIDF_ONLY", None)
+        st.info("⚙️ Auto mode: Will try ColPali, fallback to TF-IDF if HuggingFace is unreachable")
+
     colpali_model = st.text_input(
         "ColPali / ColQwen model or local path",
         value=_default_colpali_model(),
-        help="Use a Hugging Face model ID or a local checkpoint path.",
+        help="Use a Hugging Face model ID (e.g., 'vidore/colpali-v1.3') or a local checkpoint path.\n\nIgnored if using TF-IDF mode.",
+        disabled=force_tfidf_only,
     )
 
     top_k = st.slider("Pages to retrieve (top-k)", min_value=1, max_value=6, value=3)
@@ -347,8 +379,11 @@ if build_button:
         st.session_state.page_images = page_images
         st.session_state.retrieval_mode = retrieval_mode
         st.session_state.index_ready = True
-        mode_label = "ColPali" if retrieval_mode == "colpali" else "TF-IDF fallback"
-        st.success(f"Index ready: {len(page_images)} pages available ({mode_label})")
+        
+        if retrieval_mode == "colpali":
+            st.success(f"✅ Index ready: {len(page_images)} pages using **ColPali** retrieval")
+        else:
+            st.success(f"✅ Index ready: {len(page_images)} pages using **TF-IDF** fallback retrieval")
     except Exception as exc:
         st.session_state.index_ready = False
         st.error(_format_runtime_error(exc))

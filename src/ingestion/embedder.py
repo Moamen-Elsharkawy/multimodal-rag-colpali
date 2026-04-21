@@ -33,12 +33,38 @@ _model_class = None
 _processor_class = None
 
 
+def _is_huggingface_unreachable(exc: Exception) -> bool:
+    """Detect if the error is due to Hugging Face being unreachable (network/timeout)."""
+    error_str = str(exc).lower()
+    hf_indicators = [
+        "connection",
+        "timeout",
+        "huggingface",
+        "unable to fetch",
+        "failed to establish",
+        "no internet",
+        "dns",
+        "urlopen",
+        "network",
+        "socket",
+        "connectionerror",
+    ]
+    return any(indicator in error_str for indicator in hf_indicators)
+
+
 def _load_model(model_name: str):
     """Load ColPali or ColQwen2 into memory (singleton pattern)."""
     global _colpali_loaded, _model, _processor, _model_class, _processor_class
 
     if _colpali_loaded:
         return
+
+    # Check if we should force TF-IDF-only mode
+    if os.getenv("USE_TFIDF_ONLY", "").lower() in ("true", "1", "yes"):
+        logger.warning("USE_TFIDF_ONLY is enabled. Skipping ColPali model loading.")
+        raise RuntimeError(
+            "ColPali model loading is disabled. Using TF-IDF fallback retrieval mode."
+        )
 
     from colpali_engine.models import ColPali, ColPaliProcessor, ColQwen2, ColQwen2Processor
 
@@ -76,10 +102,22 @@ def _load_model(model_name: str):
         if Path(model_name).exists():
             local_hint = "The provided local model path exists, but loading it still failed."
 
+        # Provide more specific guidance for offline scenarios
+        if _is_huggingface_unreachable(exc):
+            additional_info = (
+                "\n\nHugging Face appears to be unreachable (network/connectivity issue). "
+                "You can:\n"
+                "1. Use a local model checkpoint: set COLPALI_MODEL=/path/to/model\n"
+                "2. Force TF-IDF fallback: set USE_TFIDF_ONLY=true environment variable\n"
+                "3. Try again when network access to huggingface.co is available"
+            )
+        else:
+            additional_info = ""
+
         raise RuntimeError(
             f"Failed to load the ColPali model '{model_name}'. "
             "This project needs either working access to huggingface.co or a "
-            f"pre-downloaded local checkpoint. {local_hint}"
+            f"pre-downloaded local checkpoint. {local_hint}{additional_info}"
         ) from exc
 
 
