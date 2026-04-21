@@ -1,0 +1,150 @@
+{
+  "total_queries": 8,
+  "avg_faithfulness": 0.719,
+  "avg_retrieval_score": 0.325,
+  "avg_latency": 5.27,
+  "modality_breakdown": {
+    "text": 0.5,
+    "table": 1.0,
+    "chart": 0.875,
+    "mixed": 0.5
+  },
+  "results": [
+    {
+      "query_id": "text_01",
+      "query": "What is the global average life expectancy at birth?",
+      "modality": "text",
+      "top_1_citation": "WHO_World_Health_Statistics_2024, page 14",
+      "top_k_citations": [
+        "WHO_World_Health_Statistics_2024, page 14",
+        "WHO_World_Health_Statistics_2024, page 16",
+        "WHO_World_Health_Statistics_2024, page 15"
+      ],
+      "retrieval_score": 0.338577114630954,
+      "answer": "According to the document, the global average life expectancy at birth was 66.8 years in 2000, increased to 73.1 years in 2019, and was reported as 72.5 years in 2020. It is noted that life expectancy dropped to 71.4 years in 2021 (page 15).",
+      "keyword_hits": 3,
+      "keyword_total": 3,
+      "faithfulness_score": 1.0,
+      "latency_seconds": 4.35
+    },
+    {
+      "query_id": "table_01",
+      "query": "Which country has the highest under-5 mortality rate?",
+      "modality": "table",
+      "top_1_citation": "WHO_World_Health_Statistics_2023, page 31",
+      "top_k_citations": [
+        "WHO_World_Health_Statistics_2023, page 31",
+        "WHO_World_Health_Statistics_2023, page 19",
+        "WHO_World_Health_Statistics_2022, page 35"
+      ],
+      "retrieval_score": 0.1811854735579655,
+      "answer": "I couldn't find a clear answer in the retrieved pages regarding which country has the highest under-5 mortality rate.",
+      "keyword_hits": 3,
+      "keyword_total": 3,
+      "faithfulness_score": 1.0,
+      "latency_seconds": 5.04
+    },
+    {
+      "query_id": "chart_01",
+      "query": "What trend does the chart show for maternal mortality ratio between 2000 and 2020?",
+      "modality": "chart",
+      "top_1_citation": "WHO_World_Health_Statistics_2023, page 15",
+      "top_k_citations": [
+        "WHO_World_Health_Statistics_2023, page 15",
+        "WHO_World_Health_Statistics_2023, page 14",
+        "WHO_World_Health_Statistics_2022, page 34"
+      ],
+      "retrieval_score": 0.49156838687842497,
+      "answer": "The chart (Figure 11) shows that the maternal mortality ratio (MMR) decreased overall between 2000 and 2015 but has not seen sustained reduction during the SDG era, which spans from 2015 to 2020. The global MMR dropped from 339 deaths per 100,000 live births in 2000 to 227 in 2015, representing a significant decline. However, the levels of maternal mortality have remained high, with an estimated 287,000 maternal deaths in 2020 (page 15). The data also indicates variations across WHO regions, with some regions experiencing increasing trends in maternal mortality ratios (page 15).",
+      "keyword_hits": 4,
+      "keyword_total": 4,
+      "faithfulness_score": 1.0,
+      "latency_seconds": 4.48
+    },
+    {
+      "query_id": "mixed_01",
+      "query": "What percentage of countries have achieved universal health coverage?",
+      "modality": "mixed",
+      "top_1_citation": "WHO_World_Health_Statistics_2022, page 65",
+      "top_k_citations": [
+        "WHO_World_Health_Statistics_2022, page 65",
+        "WHO_World_Health_Statistics_2022, page 81",
+        "WHO_World_Health_Statistics_2022, page 4"
+      ],
+      "retrieval_score": 0.43695464802344797,
+      "answer": "I couldn't find a clear answer in the retrieved pages.",
+      "keyword_hits": 0,
+      "keyword_total": 4,
+      "faithfulness_score": 0.0,
+      "latency_seconds": 6.44
+    },
+    {
+      "query_id": "text_02",
+      "query": "What are the leading causes of death in low-income countries?",
+      "modality": "text",
+      "top_1_citation": "WHO_World_Health_Statistics_2024, page 20",
+      "top_k_citations": [
+        "WHO_World_Health_Statistics_2024, page 20",
+        "WHO_World_Health_Statistics_2022, page 15",
+        "WHO_World_Health_Statistics_2022, page 85"
+      ],
+      "retrieval_score": 0.4038271316477059,
+      "answer": "According to the information on page 20, in low-income countries, the leading causes of death primarily include communicable diseases. In 2019, communicable diseases accounted for seven of the top 10 causes of death, alongside two non-communicable diseases and one injury (road injury) (page 20). \n\nThe specific details regarding what those diseases were are not mentioned in the provided pages, so I can't provide a complete list of the leading causes in low-income countries.",
+      "keyword_hits": 0,
+      "keyword_total": 4,
+      "faithfulness_score": 0.0,
+      "latency_seconds": 4.61
+    },
+    {
+      "query_id": "table_02",
+      "query": "What is the neonatal mortality rate for Sub-Saharan Africa?",
+      "modality": "table",
+      "top_1_citation": "WHO_World_Health_Statistics_2023, page 19",
+      "top_k_citations": [
+        "WHO_World_Health_Statistics_2023, page 19",
+        "WHO_World_Health_Statistics_2022, page 35",
+        "WHO_World_Health_Statistics_2023, page 20"
+      ],
+      "retrieval_score": 0.317084692748939,
+      "answer": "The neonatal mortality rate for Sub-Saharan Africa in 2020 was 27 (UI 24 to 31) deaths per 1000 live births (According to page 26).",
+      "keyword_hits": 4,
+      "keyword_total": 4,
+      "faithfulness_score": 1.0,
+      "latency_seconds": 4.82
+    },
+    {
+      "query_id": "chart_02",
+      "query": "Describe the regional distribution of HIV/AIDS prevalence shown in the figure.",
+      "modality": "chart",
+      "top_1_citation": "WHO_World_Health_Statistics_2022, page 37",
+      "top_k_citations": [
+        "WHO_World_Health_Statistics_2022, page 37",
+        "WHO_World_Health_Statistics_2023, page 46",
+        "WHO_World_Health_Statistics_2022, page 47"
+      ],
+      "retrieval_score": 0.21150759466390143,
+      "answer": "The figure, which illustrates new HIV infections (per 1,000 uninfected population) by WHO region from 2000 to 2020, highlights the following regional trends:\n\n1. **Africa**: This region shows the highest rates of new HIV infections, peaking at around 2.8 per 1,000 uninfected population in 2000, with a gradual decline over the years to approximately 1.6 by 2020.\n\n2. **Americas**: The prevalence in this region is relatively lower than Africa, showing a slight decline from around 1.3 in 2000 to about 0.6 in 2020.\n\n3. **Eastern Mediterranean**: This region exhibits a stable low prevalence, remaining below 1.0 throughout the period.\n\n4. **Europe**: The rates in Europe are also low, similar to the Eastern Mediterranean, and show a slight increase over the years.\n\n5. **South-East Asia**: This area indicates a modest decline from approximately 0.8 in 2000 to around 0.5 in 2020.\n\n6. **Western Pacific**: This region shows the lowest rates, remaining below 0.5 throughout the 20 years.\n\n7. **Global**: On a global scale, the infection rates have shown a gradual decline from about 1.2 in 2000 to around 0.6 in 2020.\n\nOverall, the figure demonstrates significant regional differences, with Africa having the highest prevalence of new HIV infections compared to other WHO regions.",
+      "keyword_hits": 3,
+      "keyword_total": 4,
+      "faithfulness_score": 0.75,
+      "latency_seconds": 7.12
+    },
+    {
+      "query_id": "mixed_02",
+      "query": "How many people lack access to safely managed drinking water?",
+      "modality": "mixed",
+      "top_1_citation": "WHO_World_Health_Statistics_2022, page 9",
+      "top_k_citations": [
+        "WHO_World_Health_Statistics_2022, page 9",
+        "WHO_World_Health_Statistics_2023, page 65",
+        "WHO_World_Health_Statistics_2022, page 59"
+      ],
+      "retrieval_score": 0.21625070586563436,
+      "answer": "According to page 9 of the WHO World Health Statistics 2022, around 2 billion people live with only basic or limited services or rely on unprotected drinking-water sources, indicating a lack of access to safely managed drinking water.",
+      "keyword_hits": 4,
+      "keyword_total": 4,
+      "faithfulness_score": 1.0,
+      "latency_seconds": 5.27
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+# Core retrieval
+colpali-engine>=0.3.0
+torch>=2.1.0
+torchvision>=0.16.0
+
+# PDF processing
+pdf2image>=1.16.3
+Pillow>=10.0.0
+pypdf>=4.0.0
+pymupdf>=1.23.0          # fitz — much faster than pdf2image for large reports
+
+# Vector store
+faiss-cpu>=1.7.4          # swap for faiss-gpu if you have CUDA
+numpy>=1.24.0
+
+# Answer generation
+openai>=1.10.0
+
+# Evaluation
+rouge-score>=0.1.2
+bert-score>=0.3.13
+
+# App interface
+streamlit>=1.32.0
+streamlit-chat>=0.1.1
+
+# Utilities
+tqdm>=4.66.0
+python-dotenv>=1.0.0
+requests>=2.31.0
+loguru>=0.7.2
+pydantic>=2.5.0
+rich>=13.7.0              # nicer CLI output
+matplotlib>=3.8.0         # similarity map visualization
+scikit-learn>=1.4.0       # TF-IDF fallback retriever when ColPali is unavailable
+
+# Optional: local VLM instead of GPT-4o
+# transformers>=4.44.0
+# accelerate>=0.26.0
